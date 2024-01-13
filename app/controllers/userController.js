@@ -1,28 +1,35 @@
 const db = require('../../config/db');
 
-exports.getUsers = async(req, res) => {
-    const query = 'SELECT * FROM Users'
+exports.getUsers = async (req, res) => {
+    const query = 'SELECT * FROM Users';
 
-    try{
-        const result = await db.query('SELECT * FROM Users');
-        res.send({ users: result }) 
-    }catch (err) {
+    try {
+        const result = await db.query(query); 
+        res.send({ users: result });
+    } catch (err) {
         console.error('Error en la aplicación:', err);
-    } 
-}
+        res.status(500).send({ error: 'Error en la aplicación' });
+    } finally {
+        const connection = await db.connect();
+        db.disconnect(connection); 
+    }
+};
 
 exports.addUser = async (req, res) => {
     console.log(req.body);
     const { UserName, Email, DateOfBirth } = req.body;
 
-    const query = `INSERT INTO Users (UserName, Email, DateOfBirth, CreatedAt) VALUES ('${UserName}', '${Email}', '${DateOfBirth}', GETDATE())`;
+    const query = `INSERT INTO Users (UserName, Email, DateOfBirth, CreatedAt) VALUES ('${UserName}', '${Email}', '${DateOfBirth}', NOW())`; // Se cambia GETDATE() por NOW()
 
     try {
-        const result = await db.query(query);
-        res.send({ message: 'Usuario agregado correctamente'});
+        const result = await db.query( query);
+        res.send({ message: 'Usuario agregado correctamente' });
     } catch (err) {
         console.error('Error al agregar usuario:', err);
         res.status(500).send({ error: 'Error al agregar usuario' });
+    } finally {
+        const connection = await db.connect();
+        db.disconnect(connection);
     }
 };
 
@@ -38,6 +45,9 @@ exports.updateUser = async (req, res) => {
     } catch (err) {
         console.error('Error al actualizar usuario:', err);
         res.status(500).send({ error: 'Error al actualizar usuario' });
+    } finally {
+        const connection = await db.connect();
+        db.disconnect(connection);
     }
 };
 
@@ -51,5 +61,8 @@ exports.deleteUser = async (req, res) => {
     } catch (err) {
         console.error('Error al eliminar usuario:', err);
         res.status(500).send({ error: 'Error al eliminar usuario' });
+    } finally {
+        const connection = await db.connect();
+        db.disconnect(connection);
     }
 };
