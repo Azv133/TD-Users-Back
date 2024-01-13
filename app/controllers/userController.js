@@ -9,9 +9,6 @@ exports.getUsers = async (req, res) => {
     } catch (err) {
         console.error('Error en la aplicación:', err);
         res.status(500).send({ error: 'Error en la aplicación' });
-    } finally {
-        const connection = await db.connect();
-        db.disconnect(connection); 
     }
 };
 
@@ -27,9 +24,6 @@ exports.addUser = async (req, res) => {
     } catch (err) {
         console.error('Error al agregar usuario:', err);
         res.status(500).send({ error: 'Error al agregar usuario' });
-    } finally {
-        const connection = await db.connect();
-        db.disconnect(connection);
     }
 };
 
@@ -45,9 +39,6 @@ exports.updateUser = async (req, res) => {
     } catch (err) {
         console.error('Error al actualizar usuario:', err);
         res.status(500).send({ error: 'Error al actualizar usuario' });
-    } finally {
-        const connection = await db.connect();
-        db.disconnect(connection);
     }
 };
 
@@ -61,8 +52,5 @@ exports.deleteUser = async (req, res) => {
     } catch (err) {
         console.error('Error al eliminar usuario:', err);
         res.status(500).send({ error: 'Error al eliminar usuario' });
-    } finally {
-        const connection = await db.connect();
-        db.disconnect(connection);
     }
 };
